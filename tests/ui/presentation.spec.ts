@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test('policy changes invalidate approval and recovery verifies a receipt', async ({ page }) => {
   await page.goto('/?scenario=context#lab');
+  await expect(page.getByRole('link', { name: 'Find me on LinkedIn' })).toHaveAttribute('href', 'https://www.linkedin.com/in/saranvashisht/');
   await page.getByRole('button', { name: 'Approve as operator' }).click();
   await expect(page.getByText('Approved against the current policy')).toBeVisible();
   await page.getByRole('button', { name: 'Change threshold to ₹1,000' }).click();
