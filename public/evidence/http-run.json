@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "scenario": "ERP commits; response is lost; relay restarts and reads receipt",
+  "command": "node lab/record.mjs",
+  "startedAt": "2026-10-20T19:05:29.911Z",
+  "completedAt": "2026-10-20T19:05:32.602Z",
+  "sourceRevision": "working-tree-sha256:061cf56c7b83ac64bf45b9c5b53851122e65894696b76cc19c28074d01e50491",
+  "fixtureId": "invoice-000184",
+  "state": "verified",
+  "postingCount": 1,
+  "receipt": {
+    "schemaVersion": 1,
+    "invoice": {
+      "entity": "NORTHSTAR-IN",
+      "vendor": "PAPERCARE-01",
+      "invoiceId": "000184",
+      "amountMinor": 125000,
+      "currency": "INR",
+      "purpose": "printer-maintenance",
+      "coding": "FACILITIES"
+    },
+    "businessKey": "[\"NORTHSTAR-IN\",\"PAPERCARE-01\",\"000184\"]",
+    "idempotencyKey": "a5f216f3ee96750e760053e557c6d4a80a19f0f4cb26b2e19eb6cbbe76df2998",
+    "payloadDigest": "05e4ce81200cb02e9eea0f534ee54328eb04d61b7f7a8de70343bc232a56566d",
+    "receiptId": "99f1b5f0-0737-40d0-9589-8f4e4e201eff",
+    "committedAt": "2026-10-20T19:05:30.560589+00:00",
+    "storeId": "37153339-fc7a-4b08-a583-e4bbfd36eb74"
+  },
+  "metrics": {
+    "selectedFaultRecovery": {
+      "numerator": 1,
+      "denominator": 1
+    },
+    "duplicatePostings": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "unapprovedWrites": {
+      "numerator": 0,
+      "denominator": 1
+    }
+  },
+  "events": [
+    {
+      "step": "unapproved admission rejected",
+      "status": 1,
+      "erpCountBefore": 0,
+      "erpCountAfter": 0
+    },
+    {
+      "step": "post response lost",
+      "state": "outcome_unknown",
+      "posts": 1
+    },
+    {
+      "step": "new relay process reads saved receipt",
+      "state": "verified",
+      "posts": 1,
+      "reads": 1
+    },
+    {
+      "step": "identical duplicate submitted",
+      "status": 200
+    },
+    {
+      "step": "same identity, changed amount",
+      "status": 409
+    }
+  ],
+  "transientScenario": {
+    "fixtureId": "invoice-000185",
+    "first": {
+      "state": "outcome_unknown",
+      "posts": 1
+    },
+    "scheduled": {
+      "state": "retry_waiting",
+      "posts": 1,
+      "reads": 1,
+      "nextDue": 1792523132352,
+      "receipt": null
+    },
+    "earlyRetryBlocked": true,
+    "second": {
+      "state": "outcome_unknown",
+      "posts": 2
+    },
+    "recovered": {
+      "state": "verified",
+      "posts": 2,
+      "reads": 2,
+      "nextDue": 1792523132352,
+      "receipt": {
+        "schemaVersion": 1,
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "invoiceId": "000185",
+          "amountMinor": 125000,
+          "currency": "INR",
+          "purpose": "printer-maintenance",
+          "coding": "FACILITIES"
+        },
+        "businessKey": "[\"NORTHSTAR-IN\",\"PAPERCARE-01\",\"000185\"]",
+        "idempotencyKey": "48c505df68748c6eb2318c72f13171ae29058c6d9fab483b7de7160668ad224a",
+        "payloadDigest": "45ccdadf5324fafe1460d15d7d47f314d78dcfbfa4c7456b7ba0a680031094e6",
+        "receiptId": "892a7d34-5a39-4f6f-8c7c-bb97a07078de",
+        "committedAt": "2026-10-20T19:05:32.452014+00:00",
+        "storeId": "37153339-fc7a-4b08-a583-e4bbfd36eb74"
+      }
+    },
+    "postingCount": 1
+  },
+  "boundary": "Two synthetic invoices share a local mock ERP store; each relay uses a separate SQLite store. No universal exactly-once guarantee."
+}

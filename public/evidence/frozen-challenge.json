@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-20T19:05:23.772Z",
+  "command": "node scripts/run-frozen-challenge.mjs",
+  "candidateFreeze": {
+    "frozenAt": "2026-10-20T19:02:10.312Z",
+    "candidateHash": "f72a23ca6fa9110ceeb7d69dda411c8cb853771808c4df5288bba9bce1a5e90e",
+    "candidate": {
+      "version": 1,
+      "state": "proposed",
+      "scope": {
+        "entity": "NORTHSTAR-IN",
+        "vendor": "PAPERCARE-01",
+        "purpose": "printer-maintenance"
+      },
+      "coding": "FACILITIES",
+      "provenance": "teach-1",
+      "effectiveAt": "2026-01-01T00:00:00Z",
+      "effectiveUntil": null,
+      "policyRevision": 1
+    },
+    "purpose": "Candidate frozen before separate QA agent authors additional challenge cases. No tuning after opening these cases. Original known replay retained separately."
+  },
+  "candidateDigest": "c434fa2770c3e2e102899df43ef96697443222deeed6efdc87ad5b6f63470699",
+  "manifestHash": "d8c3c5c655db2f6f337c4a3d2e8e2d4cb1287a696744d5417481b6fdb64c365d",
+  "sourceRevision": "sha256:d52ea0cf25abbe87ccfd034092901e1c98741c6f9a2fadcb4a681845ae83b6a9",
+  "runnerRevision": "sha256:940a909c84aa67a7172541e765231eee5470621288d6a17cc58edec7986e6c53",
+  "authorship": "Synthetic cases independently authored by a separate review agent after the candidate freeze; not independent human validation.",
+  "methodology": "Six separate-agent edge families authored after candidate freeze, without reading candidate, routing code, or prior cases. Integration owner translated conceptual field names to the contract before first execution. Candidate content was not changed. Future-rule case changes the decision clock, not the frozen candidate. No independent human validation or full blinding; once opened these cases are known.",
+  "metrics": {
+    "baselineCorrect": {
+      "numerator": 6,
+      "denominator": 6
+    },
+    "candidateCorrect": {
+      "numerator": 6,
+      "denominator": 6
+    },
+    "unsafePolicyOverride": {
+      "numerator": 0,
+      "denominator": 1
+    },
+    "crossVendorLeakage": {
+      "numerator": 0,
+      "denominator": 1
+    }
+  },
+  "decision": "Challenge guardrails passed; no improvement claim from these edge cases. Human activation still required.",
+  "caseResults": [
+    {
+      "id": "ind-01",
+      "family": "mandatory-policy-conflict",
+      "invoiceOverrides": {},
+      "contextOverrides": {
+        "mandatoryCoding": "OFFICE-OPS"
+      },
+      "ruleOverrides": {},
+      "expectedBaseline": "OFFICE-OPS",
+      "expectedCandidate": "ESCALATE",
+      "why": "A convenience rule cannot override a mandatory policy; a conflicting candidate requires review.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": 125000,
+          "invoiceId": "ind-01",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": false,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1",
+          "requiredCoding": "OFFICE-OPS"
+        },
+        "now": "2026-10-21T00:00:00Z"
+      },
+      "baseline": "OFFICE-OPS",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "ind-02",
+      "family": "future-effective-rule",
+      "invoiceOverrides": {},
+      "contextOverrides": {},
+      "ruleOverrides": {
+        "effective": "future"
+      },
+      "expectedBaseline": "OFFICE-OPS",
+      "expectedCandidate": "OFFICE-OPS",
+      "why": "A future rule is not in force for the current invoice.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": 125000,
+          "invoiceId": "ind-02",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": false,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1"
+        },
+        "now": "2025-12-31T00:00:00Z"
+      },
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "ind-03",
+      "family": "invalid-amount",
+      "invoiceOverrides": {
+        "amountMinor": -1
+      },
+      "contextOverrides": {},
+      "ruleOverrides": {},
+      "expectedBaseline": "ESCALATE",
+      "expectedCandidate": "ESCALATE",
+      "why": "An invalid negative invoice amount requires review before coding or posting.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": -1,
+          "invoiceId": "ind-03",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": false,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1"
+        },
+        "now": "2026-10-21T00:00:00Z"
+      },
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "ind-04",
+      "family": "missing-vendor-evidence",
+      "invoiceOverrides": {},
+      "contextOverrides": {
+        "vendorEvidence": "missing"
+      },
+      "ruleOverrides": {},
+      "expectedBaseline": "ESCALATE",
+      "expectedCandidate": "ESCALATE",
+      "why": "A vendor identifier without supporting authoritative evidence is insufficient to apply a scoped rule.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": 125000,
+          "invoiceId": "ind-04",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": null,
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": false,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1"
+        },
+        "now": "2026-10-21T00:00:00Z"
+      },
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "ind-05",
+      "family": "different-vendor",
+      "invoiceOverrides": {
+        "vendor": "PAPERCARE-02"
+      },
+      "contextOverrides": {
+        "vendorEvidence": "valid for PAPERCARE-02"
+      },
+      "ruleOverrides": {},
+      "expectedBaseline": "OFFICE-OPS",
+      "expectedCandidate": "OFFICE-OPS",
+      "why": "The scope identifies a different vendor, so the candidate does not match.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-02",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": 125000,
+          "invoiceId": "ind-05",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-02",
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": false,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1"
+        },
+        "now": "2026-10-21T00:00:00Z"
+      },
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "ind-06",
+      "family": "contradictory-authority",
+      "invoiceOverrides": {},
+      "contextOverrides": {
+        "authority": "two current authoritative policies conflict on required coding"
+      },
+      "ruleOverrides": {},
+      "expectedBaseline": "ESCALATE",
+      "expectedCandidate": "ESCALATE",
+      "why": "Contradictory current authorities require human resolution instead of choosing one silently.",
+      "input": {
+        "invoice": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "purpose": "printer-maintenance",
+          "currency": "INR",
+          "amountMinor": 125000,
+          "invoiceId": "ind-06",
+          "coding": "OFFICE-OPS"
+        },
+        "context": {
+          "entity": "NORTHSTAR-IN",
+          "vendor": "PAPERCARE-01",
+          "revision": 1,
+          "thresholdMinor": 100000,
+          "effectiveAt": "2025-01-01T00:00:00Z",
+          "supersededAt": null,
+          "conflict": true,
+          "permittedCoding": [
+            "OFFICE-OPS",
+            "FACILITIES"
+          ],
+          "source": "challenge-policy-v1"
+        },
+        "now": "2026-10-21T00:00:00Z"
+      },
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    }
+  ]
+}

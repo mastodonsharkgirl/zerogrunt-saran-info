@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-20T19:02:15.552Z",
+  "command": "node lab/evaluate.mjs",
+  "sourceRevision": "working-tree-sha256:ac8e87accd97df54de83ec3cf2b7d1bf263cf2142961672bca80cf5d9014e7c7",
+  "manifestHash": "4557a2369446baf177038595f4955c4cd99145c9af2749ac22481150ca462938",
+  "candidateHash": "f72a23ca6fa9110ceeb7d69dda411c8cb853771808c4df5288bba9bce1a5e90e",
+  "candidateDigest": "c434fa2770c3e2e102899df43ef96697443222deeed6efdc87ad5b6f63470699",
+  "evaluation": {
+    "candidateDigest": "c434fa2770c3e2e102899df43ef96697443222deeed6efdc87ad5b6f63470699",
+    "policyRevision": 1,
+    "manifestHash": "4557a2369446baf177038595f4955c4cd99145c9af2749ac22481150ca462938",
+    "rows": [
+      {
+        "id": "dev-1",
+        "expected": "FACILITIES",
+        "baseline": "OFFICE-OPS",
+        "candidate": "FACILITIES"
+      },
+      {
+        "id": "dev-2",
+        "expected": "OFFICE-OPS",
+        "baseline": "OFFICE-OPS",
+        "candidate": "OFFICE-OPS"
+      },
+      {
+        "id": "dev-3",
+        "expected": "OFFICE-OPS",
+        "baseline": "OFFICE-OPS",
+        "candidate": "OFFICE-OPS"
+      },
+      {
+        "id": "dev-4",
+        "expected": "ESCALATE",
+        "baseline": "ESCALATE",
+        "candidate": "ESCALATE"
+      },
+      {
+        "id": "dev-5",
+        "expected": "ESCALATE",
+        "baseline": "ESCALATE",
+        "candidate": "ESCALATE"
+      }
+    ],
+    "eligible": true,
+    "evaluationId": "1215ece31eabc79e30f3d05e1185aee481500a4143fbc89df72ea28fb2faf5fe"
+  },
+  "fixtureAuthor": "Synthetic fixtures and candidate authored by the same implementation team.",
+  "candidate": {
+    "version": 1,
+    "state": "evaluated",
+    "scope": {
+      "entity": "NORTHSTAR-IN",
+      "vendor": "PAPERCARE-01",
+      "purpose": "printer-maintenance"
+    },
+    "coding": "FACILITIES",
+    "provenance": "teach-1",
+    "effectiveAt": "2026-01-01T00:00:00Z",
+    "effectiveUntil": null,
+    "policyRevision": 1,
+    "lastActor": "reviewer",
+    "approvedDigest": "c434fa2770c3e2e102899df43ef96697443222deeed6efdc87ad5b6f63470699",
+    "eligible": true,
+    "evaluatedDigest": "c434fa2770c3e2e102899df43ef96697443222deeed6efdc87ad5b6f63470699",
+    "evaluationId": "1215ece31eabc79e30f3d05e1185aee481500a4143fbc89df72ea28fb2faf5fe",
+    "manifestHash": "4557a2369446baf177038595f4955c4cd99145c9af2749ac22481150ca462938"
+  },
+  "decision": "eligible for separate activation review",
+  "limitations": "Previously opened cases are known replay, not fresh held-out validation. Several replay families are related to development cases. This policy-only experiment makes no ERP writes or model-quality measurement.",
+  "splits": {
+    "teaching": 1,
+    "development": 5,
+    "known-holdout-replay": 6
+  },
+  "metrics": {
+    "baseline": {
+      "development": {
+        "routingCorrect": {
+          "numerator": 2,
+          "denominator": 3
+        },
+        "appropriateEscalation": {
+          "numerator": 2,
+          "denominator": 2
+        },
+        "unnecessaryEscalation": {
+          "numerator": 0,
+          "denominator": 3
+        },
+        "scopeLeakage": {
+          "numerator": 0,
+          "denominator": 5
+        }
+      },
+      "known-holdout-replay": {
+        "routingCorrect": {
+          "numerator": 3,
+          "denominator": 4
+        },
+        "appropriateEscalation": {
+          "numerator": 2,
+          "denominator": 2
+        },
+        "unnecessaryEscalation": {
+          "numerator": 0,
+          "denominator": 4
+        },
+        "scopeLeakage": {
+          "numerator": 0,
+          "denominator": 6
+        }
+      }
+    },
+    "candidate": {
+      "development": {
+        "routingCorrect": {
+          "numerator": 3,
+          "denominator": 3
+        },
+        "appropriateEscalation": {
+          "numerator": 2,
+          "denominator": 2
+        },
+        "unnecessaryEscalation": {
+          "numerator": 0,
+          "denominator": 3
+        },
+        "scopeLeakage": {
+          "numerator": 0,
+          "denominator": 5
+        }
+      },
+      "known-holdout-replay": {
+        "routingCorrect": {
+          "numerator": 4,
+          "denominator": 4
+        },
+        "appropriateEscalation": {
+          "numerator": 2,
+          "denominator": 2
+        },
+        "unnecessaryEscalation": {
+          "numerator": 0,
+          "denominator": 4
+        },
+        "scopeLeakage": {
+          "numerator": 0,
+          "denominator": 6
+        }
+      }
+    }
+  },
+  "caseResults": [
+    {
+      "id": "teach-1",
+      "split": "teaching",
+      "family": "correction",
+      "purpose": "printer-maintenance",
+      "entity": "NORTHSTAR-IN",
+      "expected": "FACILITIES",
+      "why": "Teaching correction for printer service",
+      "baseline": "OFFICE-OPS",
+      "candidate": "FACILITIES",
+      "baselineCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "dev-1",
+      "split": "development",
+      "family": "service",
+      "purpose": "printer-maintenance",
+      "entity": "NORTHSTAR-IN",
+      "expected": "FACILITIES",
+      "why": "Comparable printer service",
+      "baseline": "OFFICE-OPS",
+      "candidate": "FACILITIES",
+      "baselineCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "dev-2",
+      "split": "development",
+      "family": "supplies",
+      "purpose": "supplies",
+      "entity": "NORTHSTAR-IN",
+      "expected": "OFFICE-OPS",
+      "why": "Different purpose",
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "dev-3",
+      "split": "development",
+      "family": "other-entity",
+      "purpose": "printer-maintenance",
+      "entity": "SOUTHSTAR-IN",
+      "expected": "OFFICE-OPS",
+      "why": "Different entity",
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "dev-4",
+      "split": "development",
+      "family": "ambiguity",
+      "purpose": "ambiguous",
+      "entity": "NORTHSTAR-IN",
+      "expected": "ESCALATE",
+      "why": "Purpose unclear",
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "dev-5",
+      "split": "development",
+      "family": "supersession",
+      "purpose": "policy-superseded",
+      "entity": "NORTHSTAR-IN",
+      "expected": "ESCALATE",
+      "why": "Old policy expired",
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-1",
+      "split": "known-holdout-replay",
+      "family": "service-replay",
+      "purpose": "printer-maintenance",
+      "entity": "NORTHSTAR-IN",
+      "expected": "FACILITIES",
+      "why": "Comparable maintenance; related to development family",
+      "baseline": "OFFICE-OPS",
+      "candidate": "FACILITIES",
+      "baselineCorrect": false,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-2",
+      "split": "known-holdout-replay",
+      "family": "supplies-replay",
+      "purpose": "supplies",
+      "entity": "NORTHSTAR-IN",
+      "expected": "OFFICE-OPS",
+      "why": "Same vendor and different purpose",
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-3",
+      "split": "known-holdout-replay",
+      "family": "entity-replay",
+      "purpose": "printer-maintenance",
+      "entity": "SOUTHSTAR-IN",
+      "expected": "OFFICE-OPS",
+      "why": "Other entity",
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-4",
+      "split": "known-holdout-replay",
+      "family": "conflict",
+      "purpose": "conflict",
+      "entity": "NORTHSTAR-IN",
+      "expected": "ESCALATE",
+      "why": "Conflicting authority",
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-5",
+      "split": "known-holdout-replay",
+      "family": "missing",
+      "purpose": "missing",
+      "entity": "NORTHSTAR-IN",
+      "expected": "ESCALATE",
+      "why": "Missing evidence",
+      "baseline": "ESCALATE",
+      "candidate": "ESCALATE",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    },
+    {
+      "id": "hold-6",
+      "split": "known-holdout-replay",
+      "family": "inactive",
+      "purpose": "printer-maintenance",
+      "entity": "NORTHSTAR-IN",
+      "inactive": true,
+      "expected": "OFFICE-OPS",
+      "why": "Matching scope but rule withdrawn",
+      "baseline": "OFFICE-OPS",
+      "candidate": "OFFICE-OPS",
+      "baselineCorrect": true,
+      "candidateCorrect": true
+    }
+  ]
+}

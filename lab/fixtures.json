@@ -1,0 +1,14 @@
+[
+  {"id":"teach-1","split":"teaching","family":"correction","purpose":"printer-maintenance","entity":"NORTHSTAR-IN","expected":"FACILITIES","why":"Teaching correction for printer service"},
+  {"id":"dev-1","split":"development","family":"service","purpose":"printer-maintenance","entity":"NORTHSTAR-IN","expected":"FACILITIES","why":"Comparable printer service"},
+  {"id":"dev-2","split":"development","family":"supplies","purpose":"supplies","entity":"NORTHSTAR-IN","expected":"OFFICE-OPS","why":"Different purpose"},
+  {"id":"dev-3","split":"development","family":"other-entity","purpose":"printer-maintenance","entity":"SOUTHSTAR-IN","expected":"OFFICE-OPS","why":"Different entity"},
+  {"id":"dev-4","split":"development","family":"ambiguity","purpose":"ambiguous","entity":"NORTHSTAR-IN","expected":"ESCALATE","why":"Purpose unclear"},
+  {"id":"dev-5","split":"development","family":"supersession","purpose":"policy-superseded","entity":"NORTHSTAR-IN","expected":"ESCALATE","why":"Old policy expired"},
+  {"id":"hold-1","split":"known-holdout-replay","family":"service-replay","purpose":"printer-maintenance","entity":"NORTHSTAR-IN","expected":"FACILITIES","why":"Comparable maintenance; related to development family"},
+  {"id":"hold-2","split":"known-holdout-replay","family":"supplies-replay","purpose":"supplies","entity":"NORTHSTAR-IN","expected":"OFFICE-OPS","why":"Same vendor and different purpose"},
+  {"id":"hold-3","split":"known-holdout-replay","family":"entity-replay","purpose":"printer-maintenance","entity":"SOUTHSTAR-IN","expected":"OFFICE-OPS","why":"Other entity"},
+  {"id":"hold-4","split":"known-holdout-replay","family":"conflict","purpose":"conflict","entity":"NORTHSTAR-IN","expected":"ESCALATE","why":"Conflicting authority"},
+  {"id":"hold-5","split":"known-holdout-replay","family":"missing","purpose":"missing","entity":"NORTHSTAR-IN","expected":"ESCALATE","why":"Missing evidence"},
+  {"id":"hold-6","split":"known-holdout-replay","family":"inactive","purpose":"printer-maintenance","entity":"NORTHSTAR-IN","inactive":true,"expected":"OFFICE-OPS","why":"Matching scope but rule withdrawn"}
+]
