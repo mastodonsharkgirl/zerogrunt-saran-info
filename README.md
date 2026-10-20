@@ -4,6 +4,10 @@ An independent application by Saran Vashisht. One fictional printer-maintenance
 invoice explores changing business context, interrupted posting, human correction
 and evaluation. Built with Codex assistance.
 
+[Open the application](https://zerogrunt.saran.info/) ·
+[Fallback preview](https://zerogrunt-saran-info.pages.dev/) ·
+[Release evidence](docs/RELEASE.md)
+
 ## Run locally
 
 Node 24.11+ (under 26), Python 3 and npm are required.

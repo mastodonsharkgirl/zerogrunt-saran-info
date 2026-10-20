@@ -2,31 +2,38 @@
 
 Updated 2026-10-21.
 
-Active: final core review, responsive visual QA, then publication.
-Existing parent workspace changes are preserved. Isolated Git repository is
-on codex/zerogrunt-application. No commit/push/deploy yet.
+Implemented, reviewed and published. See [release evidence](docs/RELEASE.md)
+for the tested application revision, deployment and verification boundaries.
 
-Completed: source ledger (private), Astro/React presentation, four browser
-scenarios, durable local Node/Python HTTP experiment and known synthetic replay.
-Review repaired missing durable rule lifecycle, constant store identity, crash
-recovery and a malformed approval that omitted expiry. Recheck final results
-after reviewer releases the implementation.
+- Public application: https://zerogrunt.saran.info/
+- Fallback preview: https://zerogrunt-saran-info.pages.dev/
+- Source: https://github.com/mastodonsharkgirl/zerogrunt-saran-info
+- Branch: `codex/zerogrunt-application`.
 
-Actual Qwen3 1.7B local proposals recorded: 2/2 passed schema, 0/2 matched the
-supplied maintenance policy. Wrong outputs are preserved and held for review.
-Original evaluation cases were seen during implementation and are honestly
-labelled known replay. Candidate frozen before separate QA agent authors a
-new challenge; do not tune it after opening those cases.
+The browser demonstration is an in-memory simulation. The retained HTTP
+experiment uses separate local Node/Python processes and SQLite stores.
+Neither connects to a real ERP. No visitor data, external model API or
+employer information is collected.
 
-Cloudflare account and saran.info zone verified. New Pages project exists:
-zerogrunt-saran-info.pages.dev, no deployment yet. Existing Wrangler token
-can deploy Pages but cannot read/write DNS. Signed-in Chrome Cloudflare
-dashboard can inspect DNS; zerogrunt is unoccupied (4 existing records).
-Use that UI for only the requested record after reviewed deployment.
+Review repaired durable rule lifecycle, store identity, crash recovery,
+malformed approval/retry records and receipt uniqueness. Final review found
+no remaining P0/P1 issue within the reviewed scope.
 
-Final core review: no P0/P1 remaining; P2 duplicate receipt identifiers repaired.
-Fresh combined `npm run qa`: 0 type errors, 25 Node tests, static build and
-5 Chromium tests passed. Frozen challenge executed once: baseline 6/6,
-candidate 6/6; no improvement claim. Build inventory excludes private data.
+The original synthetic evaluation is a known replay, not unseen validation.
+A candidate was frozen before a separate QA agent authored six new challenge
+cases. Baseline and candidate both matched 6/6 expectations: a guardrail result,
+not an improvement. No candidate tuning followed the challenge.
 
-Next: commit/push reviewed source, deploy, bind hostname, verify served assets.
+Two actual local Qwen3 1.7B proposals passed schema validation but both got
+the supplied maintenance policy wrong. Both remain held for human review.
+Raw responses are retained; no success was substituted.
+
+Only the requested `zerogrunt` CNAME was added. Existing DNS records and
+parent-workspace changes were preserved. Cloudflare reports the custom domain,
+validation and verification active. Public DNS resolves; this machine's
+default resolver still returned a cached negative answer during verification.
+Custom-domain browser tests used a per-process public-address override with
+normal TLS certificate validation. No system DNS or hosts settings changed.
+
+Nothing was sent to Saurav, ZeroGrunt or any other recipient. Physical Android
+and in-app browser checks remain manual follow-up, not claimed as completed.

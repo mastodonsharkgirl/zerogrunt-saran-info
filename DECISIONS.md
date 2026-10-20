@@ -47,3 +47,13 @@ both proposals; schema validity is not semantic correctness.
 The user's copy direction is plain, personal and concrete. Remove slogans,
 avoid claims that generated work demonstrates independent programming fluency,
 and explain the actual choices with the assistance credit attached.
+# Release follow-through
+
+The final copy uses specific first-person choices and modest scope, rather than
+promotional claims. AI assistance remains explicit. Mobile displays the author's
+full name and independent-application attribution, not only initials.
+
+The portfolio's old `#contact` fragment does not exist on its current public
+homepage. The contact action links directly to the LinkedIn profile already
+published by that homepage. It does not initiate or send a message.
+
