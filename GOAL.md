@@ -15,7 +15,7 @@ https://zerogrunt.saran.info with a useful synthetic invoice demonstration.
 - [x] Seven-section responsive page, presentation mode, deep links and keyboard controls.
 - [x] Production build, focused behavioral checks and npm run qa pass.
 - [x] Screenshots inspected at mobile, tablet and desktop; reduced motion exercised.
-- [x] Sanitized public source, verified deployment and custom domain (local resolver caveat in release notes).
+- [x] Sanitized public source, verified deployment and custom domain.
 - [x] Plain-language two/five-minute walkthrough and interview exercise.
 
 The supplied 2026-10-20 research baseline is a starting point, not current proof.

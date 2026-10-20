@@ -26,7 +26,8 @@ every subsequent documentation revision was separately deployed.
 - Chromium interaction tests: five passed, covering policy invalidation,
   receipt recovery, correction/testing/activation/withdrawal, presentation mode,
   keyboard focus, narrow-screen layout and recorded evidence.
-- The same five tests passed against the deployed custom hostname.
+- The same five tests passed against the deployed custom hostname, including
+  a final run with normal system DNS and no resolver override.
 - All 21 served files matched the local production build byte for byte,
   including JavaScript, CSS, fonts, social image and four evidence reports.
 
@@ -48,15 +49,18 @@ Only `zerogrunt` was added as a proxied CNAME to
 Public DNS resolvers return the Cloudflare addresses. HTTPS for the custom
 hostname serves the correct site with normal certificate validation.
 
-This machine's default resolver continued returning `ENOTFOUND` during the
-release checks. Consequently, custom-domain browser tests and file comparison
+This machine's default resolver initially returned `ENOTFOUND` during the
+release checks. Consequently, the initial custom-domain tests and file comparison
 used a per-process Chromium resolver override to the publicly resolved address
 `172.67.171.244`. TLS verification was not disabled. System DNS and hosts were
-not changed. The Pages preview also passed interaction and delivery checks
-without that override on the earlier release. Use the stable preview if a
-visitor's resolver has not yet picked up the new hostname.
+not changed. The cache subsequently cleared: system DNS resolved normally and
+all five custom-domain browser tests passed again without any override.
+All 21 files were then compared again using normal system DNS with zero
+mismatches; plain HTTP redirected with 301 and the recovery deep link returned 200.
+The Pages preview also passed interaction and delivery checks without that
+override on the earlier release. It remains a fallback for resolver delays.
 
-Local evidence is retained under ignored `.private/`: `custom-delivery.json`,
+Local evidence is retained under ignored `.private/`: `live-delivery.json`, `custom-delivery.json`,
 `live-test-results.json` and `screenshots/live-*.png`. DNS-dashboard evidence
 stays private, not in the public build.
 

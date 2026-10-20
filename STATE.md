@@ -31,9 +31,11 @@ Raw responses are retained; no success was substituted.
 Only the requested `zerogrunt` CNAME was added. Existing DNS records and
 parent-workspace changes were preserved. Cloudflare reports the custom domain,
 validation and verification active. Public DNS resolves; this machine's
-default resolver still returned a cached negative answer during verification.
-Custom-domain browser tests used a per-process public-address override with
-normal TLS certificate validation. No system DNS or hosts settings changed.
+default resolver initially returned a cached negative answer during verification.
+Initial custom-domain checks used a per-process public-address override with
+normal TLS certificate validation. DNS subsequently resolved normally, and all
+five live browser tests passed again without the override. No system DNS or
+hosts settings changed.
 
 Nothing was sent to Saurav, ZeroGrunt or any other recipient. Physical Android
 and in-app browser checks remain manual follow-up, not claimed as completed.
