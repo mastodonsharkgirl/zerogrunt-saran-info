@@ -40,6 +40,7 @@ test('presentation controls support keyboard exit and narrow screens do not over
   await page.setViewportSize({ width: 320, height: 700 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/?scenario=evaluation#lab');
+  await expect(page.locator('.mobile-ownership')).toBeVisible();
   await expect(page.getByRole('button', { name: /Evaluation/ })).toHaveAttribute('aria-pressed', 'true');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
   await page.getByRole('button', { name: /Presentation mode/ }).click();
