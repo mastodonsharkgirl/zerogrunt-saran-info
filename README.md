@@ -6,7 +6,7 @@ and evaluation. Built with Codex assistance.
 
 ## Run locally
 
-Node 24.11+ (under 26), Python 3 and npm are required.
+Node 24.22.1+ (under 26), Python 3 and npm are required.
 
 ```sh
 npm ci
