@@ -19,6 +19,8 @@ correction or activates a rule for you. Use the actual lab buttons to try those
 simulated actions. Starting or leaving the guide preserves your lab state;
 Reset lab explicitly resets it and closes the guide. Selecting another scenario
 also closes it. Presentation mode and the guide run separately.
+The guide focuses its step heading as it opens or changes step. Later scrolling
+and highlight fitting do not take focus back after you move to another control.
 
 Receipt verified in the browser is a simulated result. The recorded HTTP run,
 evaluation, challenge and model proposals are separate retained evidence. The
