@@ -192,6 +192,16 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 640 }
       for (let index = 0; index < step; index++) await guide.getByRole('button', { name: 'Next', exact: true }).click();
       const action = page.getByRole('button', { name: { context: 'Approve as operator', recovery: 'Send · lose response', correction: 'Apply one-off correction' }[scenario], exact: true });
       await expect(page.locator('[data-walkthrough-current]')).toHaveCount(1);
+      const settlingSamples: { time: number; groupTop: number; groupBottom: number; panelTop: number; fonts: string }[] = [];
+      await expect.poll(async () => {
+        const sample = await action.evaluate(async (button) => {
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+          const group = button.closest('.lab-actions')!.getBoundingClientRect();
+          return { time: performance.now(), groupTop: group.top, groupBottom: group.bottom, panelTop: document.querySelector('.walkthrough')!.getBoundingClientRect().top, fonts: document.fonts.status };
+        });
+        settlingSamples.push(sample);
+        return sample.fonts === 'loaded' && sample.groupTop >= 0 && sample.groupBottom <= sample.panelTop - 8;
+      }, { message: 'The rendered action group must settle fully above the coach' }).toBeTruthy();
       const receipt = await action.evaluate((button) => {
         const r = button.getBoundingClientRect();
         const x = r.left + r.width / 2; const y = r.top + r.height / 2;
@@ -205,7 +215,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 640 }
       if (out) {
         await page.screenshot({ path: path.join(out, `pointer-${scenario}-${viewport.width}.png`) });
         const { writeFile } = await import('node:fs/promises');
-        await writeFile(path.join(out, `pointer-${scenario}-${viewport.width}.json`), JSON.stringify(receipt, null, 2));
+        await writeFile(path.join(out, `pointer-${scenario}-${viewport.width}.json`), JSON.stringify({ ...receipt, settlingSamples }, null, 2));
       }
       expect(receipt.action.x).toBeGreaterThanOrEqual(0);
       expect(receipt.action.x + receipt.action.width).toBeLessThanOrEqual(viewport.width);
