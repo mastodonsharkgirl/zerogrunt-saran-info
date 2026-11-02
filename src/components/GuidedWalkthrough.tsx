@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 type Scenario = 'context' | 'recovery' | 'correction' | 'evaluation';
 type Props = {
@@ -72,7 +72,7 @@ export default function GuidedWalkthrough({ onClose, onScenario, threshold, appr
     };
   }, [onClose]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const target = document.querySelector<HTMLElement>(`[data-tour-target="${current.target}"]`);
     const actions = target?.closest('.lab-content')?.querySelector<HTMLElement>('.lab-actions');
     let highlighted: HTMLElement | null = null;
@@ -117,12 +117,10 @@ export default function GuidedWalkthrough({ onClose, onScenario, threshold, appr
       window.scrollTo({ top: Math.max(0, window.scrollY + anchor.getBoundingClientRect().top - offset), behavior: reduce ? 'instant' : 'smooth' });
     }
 
-    const frame = requestAnimationFrame(() => {
-      const copy = heading.current?.closest('.walkthrough-copy');
-      if (copy) copy.scrollTop = 0;
-      heading.current?.focus({ preventScroll: true });
-      fit();
-    });
+    const copy = heading.current?.closest('.walkthrough-copy');
+    if (copy) copy.scrollTop = 0;
+    heading.current?.focus({ preventScroll: true });
+    const frame = requestAnimationFrame(fit);
     const queueFit = () => {
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(fit);

@@ -247,3 +247,41 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 640 }
     });
   }
 }
+
+test('keyboard entry sets focus on commit and later geometry frames cannot reclaim it', async ({ page }) => {
+  await page.goto('/#lab');
+  const start = page.getByRole('button', { name: 'Start guided walkthrough' });
+  await start.focus();
+  await page.evaluate(() => {
+    const nativeFrame = window.requestAnimationFrame.bind(window);
+    const nativeCancel = window.cancelAnimationFrame.bind(window);
+    const pending = new Map<number, FrameRequestCallback>();
+    let nextId = -1;
+    window.requestAnimationFrame = (callback) => { const id = nextId--; pending.set(id, callback); return id; };
+    window.cancelAnimationFrame = (id) => { if (pending.has(id)) pending.delete(id); else nativeCancel(id); };
+    const state = window as typeof window & { releaseGuideFrames?: () => void };
+    state.releaseGuideFrames = () => {
+      window.requestAnimationFrame = nativeFrame;
+      window.cancelAnimationFrame = nativeCancel;
+      for (const callback of pending.values()) nativeFrame(callback);
+      pending.clear();
+      delete state.releaseGuideFrames;
+    };
+  });
+  await page.keyboard.press('Enter');
+  const guide = page.getByRole('region', { name: 'Guided walkthrough' });
+  await expect(guide).toBeVisible();
+  // The heading must receive focus from the DOM commit, not a future frame.
+  await expect(guide.getByRole('heading')).toBeFocused();
+  await page.keyboard.press('Tab');
+  const next = guide.getByRole('button', { name: 'Next', exact: true });
+  await expect(next).toBeFocused();
+  await page.evaluate(async () => {
+    (window as typeof window & { releaseGuideFrames?: () => void }).releaseGuideFrames?.();
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  await expect(next).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(guide).toHaveCount(0);
+  await expect(start).toBeFocused();
+});
