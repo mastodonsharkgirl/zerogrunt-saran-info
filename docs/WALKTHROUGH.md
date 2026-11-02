@@ -10,7 +10,9 @@ Choose **Start guided walkthrough** above the lab. Six short steps highlight
 an invoice, policy, recovery, correction, recorded comparisons and the existing
 explanation of AI assistance. Use Next and Back at your own pace; there is no
 timer. Collapse guide makes more room, and Show section returns to the
-current target. Escape, Exit walkthrough or Finish closes it.
+current target. Escape, Exit walkthrough or Finish closes it. On smaller screens
+or with larger text, the guide brings the current actions above its panel. Its
+title and explanation scroll together while navigation stays reachable.
 
 The guide selects views but never approves, posts, checks a receipt, applies a
 correction or activates a rule for you. Use the actual lab buttons to try those

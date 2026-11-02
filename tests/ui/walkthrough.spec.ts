@@ -178,3 +178,62 @@ test('enlarged text retains guide navigation and normal keyboard traversal', asy
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Start guided walkthrough' })).toBeFocused();
 });
+
+for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 640 }]) {
+  for (const scenario of ['context', 'recovery', 'correction'] as const) {
+    test(`real ${scenario} action receives pointer at 200% text in ${viewport.width}x${viewport.height}`, async ({ page }, testInfo) => {
+      await page.setViewportSize(viewport);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.goto('/#lab');
+      await page.addStyleTag({ content: 'html { font-size: 200% !important; }' });
+      await page.getByRole('button', { name: 'Start guided walkthrough' }).click();
+      const guide = page.getByRole('region', { name: 'Guided walkthrough' });
+      const step = { context: 1, recovery: 2, correction: 3 }[scenario];
+      for (let index = 0; index < step; index++) await guide.getByRole('button', { name: 'Next', exact: true }).click();
+      const action = page.getByRole('button', { name: { context: 'Approve as operator', recovery: 'Send · lose response', correction: 'Apply one-off correction' }[scenario], exact: true });
+      await expect(page.locator('[data-walkthrough-current]')).toHaveCount(1);
+      const receipt = await action.evaluate((button) => {
+        const r = button.getBoundingClientRect();
+        const x = r.left + r.width / 2; const y = r.top + r.height / 2;
+        const receiver = document.elementFromPoint(x, y);
+        const panel = document.querySelector('.walkthrough')!.getBoundingClientRect();
+        const group = button.closest('.lab-actions')!.getBoundingClientRect();
+        const state = document.querySelector(`[data-tour-target="${['context', 'recovery', 'correction'].find(s => document.querySelector(`[data-tour-target="${s}"]`))}"]`)?.getBoundingClientRect();
+        return { actionGroup:{top:group.top,bottom:group.bottom,height:group.height}, viewport:{width:innerWidth,height:innerHeight,scrollX,documentWidth:document.documentElement.scrollWidth,panelScrollLeft:document.querySelector('.walkthrough')!.scrollLeft}, action: { x:r.x,y:r.y,width:r.width,height:r.height }, center:{x,y}, panel:{x:panel.x,y:panel.y,width:panel.width,height:panel.height}, state:state && {x:state.x,y:state.y,width:state.width,height:state.height}, receivesPointer: Boolean(receiver && (receiver === button || button.contains(receiver))), receiver:receiver?.outerHTML.slice(0,350) };
+      });
+      const out = process.env.WALKTHROUGH_EVIDENCE_DIR;
+      if (out) {
+        await page.screenshot({ path: path.join(out, `pointer-${scenario}-${viewport.width}.png`) });
+        const { writeFile } = await import('node:fs/promises');
+        await writeFile(path.join(out, `pointer-${scenario}-${viewport.width}.json`), JSON.stringify(receipt, null, 2));
+      }
+      expect(receipt.action.x).toBeGreaterThanOrEqual(0);
+      expect(receipt.action.x + receipt.action.width).toBeLessThanOrEqual(viewport.width);
+      expect(receipt.viewport.documentWidth).toBeLessThanOrEqual(viewport.width);
+      expect(receipt.actionGroup.top).toBeGreaterThanOrEqual(0);
+      expect(receipt.actionGroup.bottom).toBeLessThanOrEqual(receipt.panel.y - 8);
+      expect((await guide.locator('.walkthrough-copy').boundingBox())!.height).toBeGreaterThan(70);
+      await page.mouse.click(receipt.center.x, receipt.center.y);
+      expect(receipt.receivesPointer, JSON.stringify(receipt)).toBeTruthy();
+      await expect(page.getByText({ context:'Approved against the current policy for this simulation.', recovery:'Outcome unknown', correction:'One-off correction applied' }[scenario], { exact:true })).toBeVisible();
+      await expect(guide).toBeVisible();
+      if (scenario !== 'correction') {
+        const next = page.getByRole('button', { name: scenario === 'recovery' ? 'Check the receipt' : 'Change threshold to ₹1,000', exact: true });
+        if (scenario === 'recovery') await expect(next).toBeFocused();
+        await expect.poll(() => next.evaluate((button) => { const r=button.getBoundingClientRect(); const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2); return Boolean(hit && (hit===button || button.contains(hit))); })).toBeTruthy();
+        const r = (await next.boundingBox())!;
+        await page.mouse.click(r.x+r.width/2,r.y+r.height/2);
+        await expect(page.getByText(scenario === 'recovery' ? 'Receipt verified' : 'The earlier approval is invalid. This invoice now needs controller review.', { exact: true })).toBeVisible();
+        if (scenario === 'recovery') await expect(page.getByRole('button', { name:'Run again' })).toBeFocused();
+        if (scenario === 'context' && viewport.width === 390) {
+          await page.setViewportSize({ width: 390, height: 640 });
+          const controller = page.getByRole('button', { name: 'Approve as controller', exact: true });
+          await expect.poll(() => controller.evaluate((button) => { const r=button.getBoundingClientRect(); const panel=document.querySelector('.walkthrough')!.getBoundingClientRect(); const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2); return r.top >= 0 && r.bottom < panel.top && Boolean(hit && (hit===button || button.contains(hit))); })).toBeTruthy();
+          const bounds = (await controller.boundingBox())!;
+          await page.mouse.click(bounds.x+bounds.width/2,bounds.y+bounds.height/2);
+          await expect(page.getByText('Approved against the current policy for this simulation.', { exact:true })).toBeVisible();
+        }
+      } else await expect(page.getByRole('button', { name:'Propose scoped rule' })).toBeFocused();
+    });
+  }
+}

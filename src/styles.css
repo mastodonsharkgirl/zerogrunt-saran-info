@@ -13,3 +13,6 @@
 .walkthrough-top,.walkthrough h3,.walkthrough-navigation,.walkthrough-tools{flex-shrink:0}.walkthrough-copy{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:4px}.walkthrough-top .quiet-button{flex-shrink:0}
 /* Keep the guide and existing entry controls usable when text is enlarged. */
 .walkthrough-top{flex-wrap:wrap}.walkthrough-tools>*{min-width:0;flex:1}.walkthrough-tools .quiet-button{text-align:left}@media(max-width:480px){.topbar{gap:12px}.scenario-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-nav button{min-width:0;overflow-wrap:anywhere}}
+
+/* At enlarged text, reflow the source content and scroll the guide title with its explanation. */
+@media(max-width:480px){.topbar{height:auto;min-height:66px;flex-wrap:wrap;padding-block:12px}h1,h2,h3{overflow-wrap:anywhere}.lab-body{grid-template-columns:minmax(0,1fr)}.lab-content,.invoice{min-width:0}.invoice dd,.invoice-amount{overflow-wrap:anywhere}}

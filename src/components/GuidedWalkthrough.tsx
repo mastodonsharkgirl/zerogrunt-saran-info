@@ -50,6 +50,7 @@ export default function GuidedWalkthrough({ onClose, onScenario, threshold, appr
   const [targetAvailable, setTargetAvailable] = useState(true);
   const [showTarget, setShowTarget] = useState(0);
   const heading = useRef<HTMLHeadingElement>(null);
+  const panel = useRef<HTMLElement>(null);
   const current = steps[step];
 
   useEffect(() => {
@@ -73,18 +74,70 @@ export default function GuidedWalkthrough({ onClose, onScenario, threshold, appr
 
   useEffect(() => {
     const target = document.querySelector<HTMLElement>(`[data-tour-target="${current.target}"]`);
+    const actions = target?.closest('.lab-content')?.querySelector<HTMLElement>('.lab-actions');
+    let highlighted: HTMLElement | null = null;
+    let resizeFrame = 0;
     setTargetAvailable(Boolean(target));
-    target?.setAttribute('data-walkthrough-current', 'true');
-    const frame = requestAnimationFrame(() => {
-      heading.current?.focus({ preventScroll: true });
-      if (target) {
-        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({ top: Math.max(0, window.scrollY + target.getBoundingClientRect().top - 24), behavior: reduce ? 'instant' : 'smooth' });
+
+    function fit() {
+      if (!target || !panel.current) return;
+      if (actions) {
+        const copy = panel.current.querySelector<HTMLElement>('.walkthrough-copy');
+        const dock = panel.current.getBoundingClientRect();
+        const chromeHeight = dock.height - (copy?.getBoundingClientRect().height || 0);
+        const bottom = parseFloat(getComputedStyle(panel.current).bottom) || 16;
+        const roomForDock = window.innerHeight - actions.getBoundingClientRect().height - bottom - 24;
+        // Reserve room for the complete action group without shrinking text or hit targets.
+        const cap = roomForDock >= chromeHeight + 80 ? Math.min(window.innerHeight * 0.6, roomForDock) : window.innerHeight * 0.6;
+        const maxHeight = `${cap}px`;
+        if (panel.current.style.maxHeight !== maxHeight) panel.current.style.maxHeight = maxHeight;
+      } else panel.current.style.maxHeight = '';
+      const dockTop = panel.current.getBoundingClientRect().top;
+      let anchor = target;
+      let offset = 24;
+      if (actions) {
+        const state = target.getBoundingClientRect();
+        const controls = actions.getBoundingClientRect();
+        const groupHeight = Math.max(state.bottom, controls.bottom) - state.top;
+        if (groupHeight + offset + 16 > dockTop) {
+          // Keep the real controls reachable when state + actions cannot fit together.
+          anchor = actions;
+          offset = Math.max(8, Math.min(24, dockTop - controls.height - 16));
+          if (controls.height + offset + 8 > dockTop) {
+            anchor = actions.querySelector<HTMLButtonElement>('button') || actions;
+          }
+        }
       }
+      if (highlighted !== anchor) {
+        highlighted?.removeAttribute('data-walkthrough-current');
+        highlighted = anchor;
+        highlighted.setAttribute('data-walkthrough-current', 'true');
+      }
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: Math.max(0, window.scrollY + anchor.getBoundingClientRect().top - offset), behavior: reduce ? 'instant' : 'smooth' });
+    }
+
+    const frame = requestAnimationFrame(() => {
+      const copy = heading.current?.closest('.walkthrough-copy');
+      if (copy) copy.scrollTop = 0;
+      heading.current?.focus({ preventScroll: true });
+      fit();
     });
+    const queueFit = () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(fit);
+    };
+    const observer = new ResizeObserver(queueFit);
+    window.addEventListener('resize', queueFit);
+    if (target) observer.observe(target);
+    if (actions) observer.observe(actions);
+    if (panel.current) observer.observe(panel.current);
     return () => {
       cancelAnimationFrame(frame);
-      target?.removeAttribute('data-walkthrough-current');
+      cancelAnimationFrame(resizeFrame);
+      observer.disconnect();
+      window.removeEventListener('resize', queueFit);
+      highlighted?.removeAttribute('data-walkthrough-current');
     };
   }, [current, showTarget]);
 
@@ -106,11 +159,10 @@ export default function GuidedWalkthrough({ onClose, onScenario, threshold, appr
     ? `The one-off correction is applied. ${candidate === 'none' ? 'No future rule has been proposed.' : `The control candidate is ${candidate}.`} This lifecycle does not establish measured improvement.`
     : 'The original OFFICE-OPS proposal is unchanged. The guide has not corrected or activated anything.';
 
-  return <section className={`walkthrough${collapsed ? ' walkthrough-collapsed' : ''}`} role="region" aria-label="Guided walkthrough">
+  return <section ref={panel} className={`walkthrough${collapsed ? ' walkthrough-collapsed' : ''}`} role="region" aria-label="Guided walkthrough">
     <div className="walkthrough-top"><span className="walkthrough-progress" role="status">Step {step + 1} of {steps.length}</span><button type="button" className="quiet-button" aria-label="Exit walkthrough" onClick={() => onClose()}>Exit</button></div>
-    <h3 ref={heading} tabIndex={-1}>{current.title}</h3>
-    {collapsed ? <button type="button" className="button outline" aria-expanded={false} onClick={() => { setCollapsed(false); setShowTarget((value) => value + 1); }}>Show guide</button> : <>
-      <div className="walkthrough-copy"><p>{current.explanation}</p><p className="walkthrough-action">{current.action}</p>{hint && <p className="walkthrough-hint">{hint}</p>}{!targetAvailable && <p className="walkthrough-hint">This part is unavailable in the current view. You can move on or exit.</p>}</div>
+    {collapsed ? <><h3 ref={heading} tabIndex={-1}>{current.title}</h3><button type="button" className="button outline" aria-expanded={false} onClick={() => { setCollapsed(false); setShowTarget((value) => value + 1); }}>Show guide</button></> : <>
+      <div className="walkthrough-copy"><h3 ref={heading} tabIndex={-1}>{current.title}</h3><p>{current.explanation}</p><p className="walkthrough-action">{current.action}</p>{hint && <p className="walkthrough-hint">{hint}</p>}{!targetAvailable && <p className="walkthrough-hint">This part is unavailable in the current view. You can move on or exit.</p>}</div>
       <div className="walkthrough-navigation"><button type="button" className="button outline" disabled={step === 0} onClick={() => go(step - 1)}>Back</button>{step < steps.length - 1 ? <button type="button" className="button dark-button" onClick={() => go(step + 1)}>Next</button> : <button type="button" className="button dark-button" onClick={() => onClose()}>Finish</button>}</div>
       <div className="walkthrough-tools"><button type="button" className="quiet-button" onClick={() => setShowTarget((value) => value + 1)}>Show section</button><button type="button" className="quiet-button" aria-label="Collapse guide" aria-expanded={true} onClick={() => setCollapsed(true)}>Collapse</button></div>
     </>}
