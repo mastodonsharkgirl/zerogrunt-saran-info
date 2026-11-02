@@ -4,6 +4,28 @@ Use these as practice notes, not as a claim that you already understand every
 line. Read the three code paths, change something small, and explain the result
 in your own words.
 
+## On-site guided walkthrough
+
+Choose **Start guided walkthrough** above the lab. Six short steps highlight
+an invoice, policy, recovery, correction, recorded comparisons and the existing
+explanation of AI assistance. Use Next and Back at your own pace; there is no
+timer. Collapse guide makes more room, and Show section returns to the
+current target. Escape, Exit walkthrough or Finish closes it. On smaller screens
+or with larger text, the guide brings the current actions above its panel. Its
+title and explanation scroll together while navigation stays reachable.
+
+The guide selects views but never approves, posts, checks a receipt, applies a
+correction or activates a rule for you. Use the actual lab buttons to try those
+simulated actions. Starting or leaving the guide preserves your lab state;
+Reset lab explicitly resets it and closes the guide. Selecting another scenario
+also closes it. Presentation mode and the guide run separately.
+
+Receipt verified in the browser is a simulated result. The recorded HTTP run,
+evaluation, challenge and model proposals are separate retained evidence. The
+guide does not rerun them, and unavailable evidence stays unavailable. Native
+Walkthrough notes remain readable without JavaScript; interactive controls need
+JavaScript. Reduced motion removes the entrance and uses instant scrolling.
+
 ## Two minutes
 
 1. Open the site and say what you chose: one ordinary printer-maintenance
